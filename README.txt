@@ -1,28 +1,38 @@
-REMIX DEFAULT WORKSPACE
+# Supply Chain Smart Contract with Payments
 
-Remix default workspace is present when:
-i. Remix loads for the very first time 
-ii. A new workspace is created with 'Default' template
-iii. There are no files existing in the File Explorer
+This Solidity smart contract models a supply chain with payment capabilities. It allows for ETH payments to be held until released by the user for immediate payment to another party involved in the supply chain.
 
-This workspace contains 3 directories:
+## Description
 
-1. 'contracts': Holds three contracts with increasing levels of complexity.
-2. 'scripts': Contains four typescript files to deploy a contract. It is explained below.
-3. 'tests': Contains one Solidity test file for 'Ballot' contract & one JS test file for 'Storage' contract.
+The `SupplyChain` contract manages the steps of a supply chain, each associated with a product. It supports registering products and updating their status with metadata and associated payments.
 
-SCRIPTS
+## Contract Details
 
-The 'scripts' folder has four typescript files which help to deploy the 'Storage' contract using 'web3.js' and 'ethers.js' libraries.
+- **Struct Step**: Represents a step in the supply chain, including status, metadata, price, and author.
+- **Enum Status**: Defines the possible statuses of a step in the supply chain.
+- **Events**: Emits an event `RegisteredStep` when a step is registered.
+- **Mappings**: Maps product IDs to arrays of steps.
 
-For the deployment of any other contract, just update the contract's name from 'Storage' to the desired contract and provide constructor arguments accordingly 
-in the file `deploy_with_ethers.ts` or  `deploy_with_web3.ts`
+## Core Features
 
-In the 'tests' folder there is a script containing Mocha-Chai unit tests for 'Storage' contract.
+- **Product Registration**: Allows users to register products in the supply chain.
+- **Step Registration**: Enables users to register steps in the supply chain with associated metadata and payments.
+- **Payment Handling**: Holds ETH payments until release by the user and ensures immediate payment to another party when updating the status of a product.
 
-To run a script, right click on file name in the file explorer and click 'Run'. Remember, Solidity file must already be compiled.
-Output from script will appear in remix terminal.
+## Usage
 
-Please note, require/import is supported in a limited manner for Remix supported modules.
-For now, modules supported by Remix are ethers, web3, swarmgw, chai, multihashes, remix and hardhat only for hardhat.ethers object/plugin.
-For unsupported modules, an error like this will be thrown: '<module_name> module require is not supported by Remix IDE' will be shown.
+1. **Product Registration**: Call the `registerProduct` function to register a new product in the supply chain.
+2. **Step Registration**: Call the `registerStep` function to register a new step in the supply chain, providing metadata and an optional payment.
+3. **Payment Release**: When updating the status of a product, ensure that the required payment is sent to the appropriate party before proceeding.
+
+### Example Usage
+
+```solidity
+// Register a new product
+supplyChain.registerProduct(productId);
+
+// Register a new step in the supply chain with metadata and payment
+supplyChain.registerStep(productId, "Ready for pick-up", 0.1 ether);
+
+// Update the status of a product and release payment to the appropriate party
+supplyChain.registerStep(productId, "Picked up", 0.05 ether);
